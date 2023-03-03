@@ -1,0 +1,17 @@
+{
+    "name": "najmul/ecom",
+    "description": "Practical test for brain station php developer post",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Najmul\\Ecom\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Najmul",
+            "email": "najmul2022@gmail.com"
+        }
+    ],
+    "require": {}
+}
