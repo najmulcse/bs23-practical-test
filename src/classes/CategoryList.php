@@ -3,6 +3,7 @@
 namespace Najmul\Ecom\classes;
 
 use Najmul\Ecom\classes\Repository\CategoryRepository;
+use Najmul\Ecom\config\DatabaseSingleton;
 
 
 class CategoryList {
@@ -10,7 +11,7 @@ class CategoryList {
     private $categoryRepo;
     public function __construct()
     {
-        $this->categoryRepo = new CategoryRepository();
+        $this->categoryRepo = new CategoryRepository(DatabaseSingleton::getInstance());
 
     }
     public  function category()

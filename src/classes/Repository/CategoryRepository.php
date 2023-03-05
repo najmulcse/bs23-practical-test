@@ -7,9 +7,9 @@ use Najmul\Ecom\config\DatabaseSingleton;
 class CategoryRepository
 {
     private $db;
-    public function __construct()
+    public function __construct(DatabaseSingleton $db)
     {
-        $this->db = DatabaseSingleton::getInstance()->getDatabase();
+        $this->db = $db->getDatabase();
     }
 
     public function getCategory()
@@ -33,14 +33,17 @@ ORDER BY COUNT(icr.ItemNumber) DESC;";
         return [];
 
     }
-    public function getChildNodeByParent($node)
+    public function getChildCategoryByParent($node)
     {
         try {
-            var_dump($node->id); die();
-            $sql = "SELECT c.Id, c.Name FROM category c 
+
+            $stmt = $this->db->prepare("SELECT c.Id, c.Name FROM category c 
              JOIN catetory_relations cr ON c.Id=cr.categoryId
-             WHERE cr.ParentcategoryId = " . $node->id;
-            return  $this->db->fetchAll($sql);
+             WHERE cr.ParentcategoryId = :parentId");
+
+            $stmt->bindValue(':parentId', $node->id, \PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll();
         }catch (\Exception $exception){
 
             return [];
@@ -50,7 +53,7 @@ ORDER BY COUNT(icr.ItemNumber) DESC;";
     }
 
 
-    public function getAllParentNode()
+    public function getAllParentCategories()
     {
         $sql = "SELECT cr.ParentcategoryId, c.Name FROM category c 
              JOIN catetory_relations cr ON c.Id=cr.ParentcategoryId
@@ -60,8 +63,10 @@ ORDER BY COUNT(icr.ItemNumber) DESC;";
     }
     public function fetchItemForEachCategory($node)
     {
-        $sql = "SELECT COUNT(*) AS count FROM Item_category_relations WHERE categoryId = " . $node->id;
-        $result = $this->db->fetch($sql);
+        $stmt = $this->db->prepare("SELECT COUNT(*) AS count FROM Item_category_relations WHERE categoryId = :category_id");
+        $stmt->bindValue(':category_id', $node->id, \PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch();
         return $result["count"];
     }
 }

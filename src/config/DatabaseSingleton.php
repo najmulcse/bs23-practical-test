@@ -3,12 +3,13 @@
 namespace Najmul\Ecom\config;
 
 class DatabaseSingleton {
-
     private static $instance;
     private $db;
 
     private function __construct() {
-        $this->db = new Database("localhost", "root", "12345678", "ecomerce");
+        $config = require_once('config.php');
+        $dbConfig = $config['database'];
+        $this->db = new Database($dbConfig['host'], $dbConfig['username'], $dbConfig['password'], $dbConfig['dbname']);
         $this->db->connect();
     }
 
@@ -22,4 +23,5 @@ class DatabaseSingleton {
     public function getDatabase() {
         return $this->db;
     }
+
 }
