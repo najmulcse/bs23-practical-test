@@ -24,31 +24,10 @@
     </style>
 </head>
 <body>
-
-<nav class="navbar navbar-inverse visible-xs">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Logo</a>
-        </div>
-        <div class="collapse navbar-collapse" id="myNavbar">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Dashboard</a></li>
-                <li><a href="#">Category List</a></li>
-                <li><a href="#">Category Tree</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
 <div class="container-fluid">
     <div class="row content">
         <div class="col-sm-3 sidenav hidden-xs">
-            <h2>Logo</h2>
+            <h2>Practical Test</h2>
             <ul class="nav nav-pills nav-stacked">
                 <li class=""><a href="?page=category">Category List</a></li>
                 <li class="active"><a href="category-tree.php">Category Item Tree</a></li>
@@ -63,38 +42,113 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="well">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Category</th>
-                                <th scope="col">Total Item</th>
-                            </tr>
-                            </thead>
-                            <tbody>
+
                             <?php
-                            if(isset($data) && $data){
-                                foreach ($data as $key => $category){
-//
-                                    ?>
-                                    <tr>
-                                        <th scope="row"> <?php echo ++$key ?></th>
-                                        <td> <?php
 
-                                            echo $category['Name'] ?? ''?> </td>
-                                        <td><?= $category['item_count'] ?? '' ?></td>
-                                    </tr>
-                                <?php }
-                            } ?>
+                            // Display tree structure on the website
+                            function displayNode($node) {
+                                $has_children = count($node->children) > 0;
+                                $item_count = $node->calculateItemCount();
+                                $classes = ['category'];
+                                if ($has_children) {
+                                    $classes[] = 'parent';
+                                    $classes[] = 'collapsed';
+                                }
+                                if ($has_children && $item_count > 0) {
+                                    $classes[] = 'arrow-visible';
+                                    echo '<li class="' . implode(' ', $classes) . '">';
+                                    echo '<span class="arrow-icon"></span>';
+                                }else{
+                                    echo '<li class="' . implode(' ', $classes) . '"';
+                                }
 
-                            </tbody>
-                        </table>
+
+                                echo '<span class="category-name">' . $node->name . ' (' . $item_count . ')</span>';
+                                if ($has_children) {
+                                    echo '<ul class="hidden">';
+                                    foreach ($node->children as $child) {
+                                        displayNode($child);
+                                    }
+                                    echo '</ul>';
+                                }
+                                echo '</li>';
+                            }
+                            echo '<ul class="category-list">';
+                            foreach ($top_nodes as $node) {
+                                displayNode($node);
+                            }
+                            echo '</ul>';
+
+                            ?>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<style>
 
-</body>
-</html>
+    ul {
+        list-style: none;
+        padding-left: 1em;
+    }
+
+    ul ul {
+        padding-left: 1em;
+    }
+
+    .category-name {
+        cursor: pointer;
+    }
+
+    .category-name:hover {
+        font-weight: bold;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .arrow-icon {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        margin-right: 0.5em;
+        border-top: 0.3em solid transparent;
+        border-bottom: 0.3em solid transparent;
+        border-left: 0.5em solid #ccc;
+    }
+
+    .arrow-visible .arrow-icon {
+        display: inline-block;
+    }
+
+    .category {
+        margin-bottom: 0.5em;
+    }
+
+    .category.parent.collapsed > .hidden {
+        display: none;
+    }
+
+    .category.parent:not(.collapsed) > .hidden {
+        display: block;
+    }
+</style>
+<script>
+    window.addEventListener("load", function() {
+        let categoryNames = document.getElementsByClassName("category-name");
+
+        for (let i = 0; i < categoryNames.length; i++) {
+            categoryNames[i].addEventListener("click", function() {
+                let categoryUl = categoryNames[i].nextElementSibling;
+                if (categoryUl.classList.contains("hidden")) {
+                    categoryUl.classList.remove("hidden");
+                } else {
+                    categoryUl.classList.add("hidden");
+                }
+            });
+        }
+    });
+</script>

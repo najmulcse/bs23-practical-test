@@ -37,7 +37,7 @@
         <br>
 
         <div class="col-sm-9">
-           <h1>Not found!!</h1>
+           <h1 style="color: darkred;">Not found!!</h1>
         </div>
     </div>
 </div>

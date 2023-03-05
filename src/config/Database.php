@@ -50,5 +50,10 @@ class Database {
     public function fetchAll($sql) {
         return $this->query($sql)->fetchAll();
     }
+    public function fetch($sql) {
+        $stmt = $this->query($sql);
+        $row = $stmt->fetch();
+        return $row;
+    }
 }
 
