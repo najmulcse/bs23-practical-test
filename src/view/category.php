@@ -55,13 +55,10 @@
                             <?php
                             if(isset($data) && $data){
                             foreach ($data as $key => $category){
-//
                              ?>
                             <tr>
                                 <th scope="row"> <?php echo ++$key ?></th>
-                                <td> <?php
-
-                                        echo $category['Name'] ?? ''?> </td>
+                                <td> <?=  $category['Name'] ?? ''?> </td>
                                 <td><?= $category['item_count'] ?? '' ?></td>
                             </tr>
                             <?php }

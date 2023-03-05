@@ -7,7 +7,7 @@ class DatabaseSingleton {
     private $db;
 
     private function __construct() {
-        $config = require_once('config.php');
+        $config = require_once('env.php');
         $dbConfig = $config['database'];
         $this->db = new Database($dbConfig['host'], $dbConfig['username'], $dbConfig['password'], $dbConfig['dbname']);
         $this->db->connect();
